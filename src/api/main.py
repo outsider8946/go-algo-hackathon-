@@ -5,7 +5,7 @@ from init_model import ChangeModel
 import torch
 
 app = Flask(__name__)
-tickers = ['MOEX','SBER','MGNT']
+tickers = ['MOEX','SBER','MGNT','AQUA', 'FLOT', 'QIWI']
 models = {'MOEX':'moex_model.pt','MGNT':'mgnt_model.pt','SBER':'sber_model.pt'}
 features = ['tradedate', 'tradetime', 'secid', 'pr_open', 'pr_high', 'pr_low',
        'pr_close', 'pr_std', 'vol', 'val', 'trades', 'pr_vwap', 'pr_change',
