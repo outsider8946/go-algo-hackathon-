@@ -11,7 +11,6 @@ features = ['tradedate', 'tradetime', 'secid', 'pr_open', 'pr_high', 'pr_low',
        'pr_close', 'pr_std', 'vol', 'val', 'trades', 'pr_vwap', 'pr_change',
        'trades_b', 'trades_s', 'val_b', 'val_s', 'vol_b', 'vol_s', 'disb',
        'pr_vwap_b', 'pr_vwap_s', 'SYSTIME']
-out = dict()
 
 def prepare_data(df:pd.DataFrame):
   df = df.drop(['SYSTIME','secid','tradedate','tradetime'],axis=1)
@@ -23,7 +22,7 @@ def prepare_data(df:pd.DataFrame):
   df_tensor = torch.tensor([df_numpy_scaled]).float()
   return df_tensor
 
-@app.route("/api-data",methods=["POST","GET"])
+@app.route("/api-data",methods=["POST"])
 def get_data():
     if(request.method == "POST"):
        for ticker in tickers:
@@ -34,12 +33,11 @@ def get_data():
             for i in range(len(features)):
                 df.at[0,features[i]] = json_data[i]
             input = prepare_data(df)
-            model = torch.load('../../pretrained_models/'+models[ticker])
+            model = torch.load('./pretrained_models/'+models[ticker])
             model.eval()
             with torch.no_grad():
-                out.update({ticker:model(input).tolist()})
-    return jsonify(out)
-    
+                out = {'ticker':ticker, 'target': model(input).item()}
+                return jsonify(out)
 
 if __name__ == '__main__':
    app.run()
