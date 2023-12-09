@@ -34,7 +34,7 @@ def get_data():
             for i in range(len(features)):
                 df.at[0,features[i]] = json_data[i]
             input = prepare_data(df)
-            model = torch.load('./pretrained_models/'+models[ticker])
+            model = torch.load('../../pretrained_models/'+models[ticker])
             model.eval()
             with torch.no_grad():
                 out.update({ticker:model(input).tolist()})
